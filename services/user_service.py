@@ -7,6 +7,7 @@ from utils.dependencies import get_db
 from models.users import User
 from datetime import datetime, timedelta
 
+# will be getting these values from environment variable/AWS secret manager/DB
 SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -19,6 +20,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
+# return jwt token
 def get_token(email):
     expiration = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     token_data = {"sub": email, "exp": expiration}
