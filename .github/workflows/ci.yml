@@ -19,7 +19,7 @@ jobs:
       - name: Run Docker Compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
-          compose-file: "./docker-compose.yml"
+          compose-file: "./docker-compose.yaml"
 
       # Step 3: Run tests in the running container
       - name: Run tests with pytest
