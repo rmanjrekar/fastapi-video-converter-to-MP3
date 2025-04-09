@@ -28,12 +28,20 @@ jobs:
         with:
           compose-file: "./docker-compose.yaml"
 
-      # Step 4: Run tests in the running container
+      # Step 4: Wait for service to be up
+      - name: Wait for service to be healthy
+        run: |
+          until curl -s http://localhost:8000/health; do
+            echo "Waiting for service to be available..."
+            sleep 2
+          done
+
+      # Step 5: Run tests in the running container
       - name: Run tests with pytest
         run: |
           docker-compose exec fastapi-app pytest -s /app/tests
 
-      # Step 5: Tear down Docker Compose services after tests
+      # Step 6: Tear down Docker Compose services after tests
       - name: Tear down Docker Compose services
         run: |
           docker-compose down
