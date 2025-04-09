@@ -14,6 +14,9 @@ class UserResponse(BaseModel):
     class Config:
         orm_mode = True
 
+class UserDelete(BaseModel):
+    id: int
+
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str

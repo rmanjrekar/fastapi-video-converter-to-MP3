@@ -7,6 +7,9 @@ auth_token = ""
 # will be getting this from environment variable/AWS secret manager/DB
 SECRET_KEY = "your-secret-key"
 
+new_email = "check@example.com"
+password = "setup"
+user_id = 1
 
 """Check if the application health is stable"""
 def test_pingable():
@@ -34,24 +37,56 @@ def test_login():
 
 """Test if the new user is created successfully"""
 def test_create_user():
-    new_email = "check7@example.com"
-    password = "setup"
 
     new_user_creation = {
         "email" : new_email,
         "password" : password
     }
 
-    create_url = ENDPOINT + "/users"
+    create_user_url = ENDPOINT + "/users"
 
     headers = {
         'Authorization': f'Bearer {auth_token}'
     }
 
-    response = requests.post(url=create_url, json=new_user_creation, headers=headers)
+    response = requests.post(url=create_user_url, json=new_user_creation, headers=headers)
+    assert response.status_code == 200
+
+    cont = response.json()
+    global user_id
+    user_id = cont['id']
+    assert 'id' in cont, "Key 'id' does not exists in response"
+    assert 'email' in cont, "Key 'email' does not exists in response"
+    assert cont['email'] == new_email, f"Expected => {new_email}', got => {cont['email']}"
+
+
+"""Test if existing user is fetched successfully"""
+def test_get_user():
+
+    get_user_url = ENDPOINT + "/users/" + str(user_id)
+
+    headers = {
+        'Authorization': f'Bearer {auth_token}'
+    }
+
+    response = requests.get(url=get_user_url, headers=headers)
     assert response.status_code == 200
 
     cont = response.json()
     assert 'id' in cont, "Key 'id' does not exists in response"
     assert 'email' in cont, "Key 'email' does not exists in response"
-    assert cont['email'] == new_email, f"Expected => {new_email}', got => {cont['email']}"
+    assert cont['id'] == user_id, f"Expected => {user_id}', got => {cont['id']}"
+
+
+"""Test if user is deleted successfully"""
+def test_delete_user():
+    delete_user_url = ENDPOINT + "/users/"
+
+    headers = {
+        'Authorization': f'Bearer {auth_token}'
+    }
+
+    payload = { "id": user_id }
+
+    response = requests.delete(url=delete_user_url, headers=headers, json=payload)
+    assert response.status_code == 200
