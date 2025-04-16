@@ -35,13 +35,16 @@ async def create_user(request: UserCreate, user: User = Depends(get_current_user
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
 
     body = request
-    hashed_password = pwd_context.hash(body.password)
-    new_user = User(email=body.email, password=hashed_password)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-    return new_user
+    searched_user = db.query(User).filter(User.email == body.email).first()
+    if searched_user:
+        raise HTTPException(status_code=409, detail="User already exists")
+    else:
+        hashed_password = pwd_context.hash(body.password)
+        new_user = User(email=body.email, password=hashed_password)
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
 
 
 @router.get("/users/{user_id}", response_model=UserResponse)
