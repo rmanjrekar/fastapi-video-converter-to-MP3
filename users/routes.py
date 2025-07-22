@@ -61,7 +61,7 @@ def get_user(user_id: int, user: User = Depends(get_current_user), db: Session =
 
 
 @router.delete("/users")
-async def delete_user(request: UserDelete, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def delete_user(request: UserDelete, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
 
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
