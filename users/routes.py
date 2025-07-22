@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.post("/login", response_model=LoginResponse)
-async def login_for_access_token(request: LoginRequest, db: Session = Depends(get_db)):
+def login_for_access_token(request: LoginRequest, db: Session = Depends(get_db)):
     email = request.email
     password = request.password
 
@@ -30,7 +30,7 @@ async def login_for_access_token(request: LoginRequest, db: Session = Depends(ge
 
 
 @router.post("/users", response_model=UserResponse)
-async def create_user(request: UserCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def create_user(request: UserCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
 

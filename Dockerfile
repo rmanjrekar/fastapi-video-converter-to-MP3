@@ -8,8 +8,8 @@ RUN apt-get update \
 WORKDIR /app
 
 # set env variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 COPY ./requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip \

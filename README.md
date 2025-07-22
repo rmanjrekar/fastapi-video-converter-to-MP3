@@ -8,6 +8,8 @@ User Authentication and Management:
 
     Retrieving user details.
 
+    Deleting users.
+
 Video Conversion:
 
     Converts video files (uploaded by users) into MP3 format.
